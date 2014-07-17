@@ -51,46 +51,46 @@ if($image){
 Installation
 -------------
 1. Add Yii2-user to the require section of your composer.json file:
-```javascript
-   {
-        "require": {
-            "costa-rico/yii2-images": "*"
-        }
-   }
-```
+    ```javascript
+       {
+            "require": {
+                "costa-rico/yii2-images": "*"
+            }
+       }
+    ```
 2. run 
-<pre>
-  php composer.phar update
-</pre>
+    <pre>
+      php composer.phar update
+    </pre>
 
 3. run migrate
-<pre>
-php yii migrate/up --migrationPath=@vendor/costa-rico/yii2-images/migrations
-</pre>
+    <pre>
+    php yii migrate/up --migrationPath=@vendor/costa-rico/yii2-images/migrations
+    </pre>
 
 4. setup module
-<pre>
-'modules' => [
-        'yii2images' => [
-            'class' => 'rico\yii2images\Module',
-            //be sure, that permissions ok  
-            'imagesStorePath' => 'images/store', //path to origin images
-            'imagesCachePath' => 'images/cache', //path to resized copies
+    <pre>
+    'modules' => [
+            'yii2images' => [
+                'class' => 'rico\yii2images\Module',
+                //be sure, that permissions ok  
+                'imagesStorePath' => 'images/store', //path to origin images
+                'imagesCachePath' => 'images/cache', //path to resized copies
+            ],
         ],
-    ],
-</pre>
+    </pre>
 
 5. attach behaviour to your model
-<pre>
-    public function behaviors()
-    {
-        return [
-            'image' => [
-                'class' => 'rico\yii2images\behaviors\ImageBehave',
-            ]
-        ];
-    }
-</pre>
+    <pre>
+        public function behaviors()
+        {
+            return [
+                'image' => [
+                    'class' => 'rico\yii2images\behaviors\ImageBehave',
+                ]
+            ];
+        }
+    </pre>
 
 Thats all!
 
@@ -98,32 +98,32 @@ Details
 -------------
 
 1. Remove image/images
-<pre>
-$model->removeImage($image); //you must to pass image (object)
-
-$model->removeImages(); //will remove all images of this model
-</pre>
+    <pre>
+    $model->removeImage($image); //you must to pass image (object)
+    
+    $model->removeImages(); //will remove all images of this model
+    </pre>
 
 2. Set main image
-<pre>
-$model->attachImage($absolutePathToImage, true); //will attach image and make it main
-
-foreach($model->getImages() as $img){
-    if($img->id == $ourId){
-        $model->setMainImage($img);//will set current image main
+    <pre>
+    $model->attachImage($absolutePathToImage, true); //will attach image and make it main
+    
+    foreach($model->getImages() as $img){
+        if($img->id == $ourId){
+            $model->setMainImage($img);//will set current image main
+        }
     }
-}
-</pre>
+    </pre>
 
 3. Get image sizes
-<pre>
-$image = $model->getImage();
-$sizes = $image->getSizesWhen('x500');
-echo '&lt;img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$image->getUrl('x500').'" />';
-</pre>
+    <pre>
+    $image = $model->getImage();
+    $sizes = $image->getSizesWhen('x500');
+    echo '&lt;img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$image->getUrl('x500').'" />';
+    </pre>
 
 4. Get original image
-<pre>
-$img = $model->getImage();
-echo $img->getPathToOrigin();
-</pre>
+    <pre>
+    $img = $model->getImage();
+    echo $img->getPathToOrigin();
+    </pre>
