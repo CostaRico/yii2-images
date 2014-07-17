@@ -51,13 +51,13 @@ if($image){
 Installation
 -------------
 1. Add Yii2-user to the require section of your composer.json file:
-    ```javascript
+    <pre>
        {
             "require": {
                 "costa-rico/yii2-images": "*"
             }
        }
-    ```
+    </pre>
 2. run 
     <pre>
       php composer.phar update
