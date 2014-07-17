@@ -55,7 +55,7 @@ Installation
 ```javascript
    {
         "require": {
-            "dektrium/yii2-user": "*"
+            "costa-rico/yii2-images": "*"
         }
    }
 ```
@@ -120,7 +120,7 @@ foreach($model->getImages() as $img){
 <pre>
 $image = $model->getImage();
 $sizes = $image->getSizesWhen('x500');
-echo '\<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$image->getUrl('x500').'" />';
+echo '&lt;img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$image->getUrl('x500').'" />';
 </pre>
 
 4. Get original image
