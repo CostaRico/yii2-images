@@ -1,0 +1,31 @@
+{
+    "name": "costa-rico/yii2-images",
+    "description": "test",
+    "keywords": ["Costa Rico"],
+    "type": "yii2-extension",
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Costa Nevazno",
+            "email": "zetogo@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "*",
+        "codeception/specify": "*",
+        "codeception/verify": "*"
+    },
+    "suggest": {
+        "ext-imagick": ""
+    },
+    "autoload": {
+        "psr-4": {
+            "rico\\yii2images\\": ""
+        }
+    }
+}
