@@ -46,7 +46,6 @@ if($image){
     $model->removeImage($image);
 }
 
-//get main
 ```
 
 Installation
