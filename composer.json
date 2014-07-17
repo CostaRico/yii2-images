@@ -1,13 +1,13 @@
 {
     "name": "costa-rico/yii2-images",
-    "description": "test",
-    "keywords": ["Costa Rico"],
+    "description": "yii2 images module for storing images",
+    "keywords": ["Costa Rico", "yii2", "images", "store", "images store", "yii2-images"],
     "type": "yii2-extension",
     "license": "MIT",
 
     "authors": [
         {
-            "name": "Costa Nevazno",
+            "name": "Costa Rico",
             "email": "zetogo@gmail.com"
         }
     ],
