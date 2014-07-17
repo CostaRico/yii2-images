@@ -1,6 +1,6 @@
 yii2-images
 ===========
-Yii2-images is yii2 module that allow to attach images to any of your model, next you can get images in any sizes, also you can set main image of images set.
+Yii2-images is yii2 module that allow to attach images to any of your models, next you can get images in any sizes, also you can set main image of images set.
 
 Module requires Imagick library.
 
