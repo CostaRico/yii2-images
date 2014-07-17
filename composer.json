@@ -3,7 +3,7 @@
     "description": "yii2 images module for storing images",
     "keywords": ["Costa Rico", "yii2", "images", "store", "images store", "yii2-images"],
     "type": "yii2-extension",
-    "license": "MIT",
+    "license": "BSD-3-Clause",
 
     "authors": [
         {
