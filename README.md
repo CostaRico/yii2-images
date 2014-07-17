@@ -34,8 +34,8 @@ foreach($images as $img){
 
 
 Installation:
-1. install from json
-2. run migration
-3. setup module
-4. setup behaviour 
-5. check permissions 
+* install from json
+* run migration
+* setup module
+* setup behaviour 
+* check permissions 
