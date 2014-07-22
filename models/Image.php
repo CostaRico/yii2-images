@@ -162,9 +162,10 @@ class Image extends \yii\db\ActiveRecord
 
                 $image->writeImage($pathToSave);
             }else{
-                if($size){
-                    $image = new \abeautifulsite\SimpleImage($imagePath);
 
+                $image = new \abeautifulsite\SimpleImage($imagePath);
+
+                if($size){
                     if($size['height'] && $size['width']){
 
                         $image->thumbnail($size['width'], $size['height']);
