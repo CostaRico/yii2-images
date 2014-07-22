@@ -2,7 +2,8 @@ yii2-images
 ===========
 Yii2-images is yii2 module that allow to attach images to any of your models, next you can get images in any sizes, also you can set main image of images set.
 
-Module requires Imagick library.
+Module supports Imagick and GD libraries, you can set up it in module settings.
+
 
 Usage instance:
 -------------
@@ -73,14 +74,16 @@ Installation
     'modules' => [
             'yii2images' => [
                 'class' => 'rico\yii2images\Module',
-                //be sure, that permissions ok  
+                //be sure, that permissions ok 
+                //if you cant avoid permission errors you have to create "images" folder in web root manually and set 777 permissions
                 'imagesStorePath' => 'images/store', //path to origin images
                 'imagesCachePath' => 'images/cache', //path to resized copies
+                'graphicsLibrary' => 'GD' //but really its better to use 'Imagick' 
             ],
         ],
     </pre>
 
-5. attach behaviour to your model
+5. attach behaviour to your model (be sure that your model has "id" property)
     <pre>
         public function behaviors()
         {
