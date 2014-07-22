@@ -12,7 +12,11 @@ class Module extends \yii\base\Module
 
     public $imagesCachePath = '@app/web/imgCache';
 
+    public $graphicsLibrary = 'GD';
+
     public $controllerNamespace = 'rico\yii2images\controllers';
+
+
 
 
     public function getImage($item, $dirtyAlias)

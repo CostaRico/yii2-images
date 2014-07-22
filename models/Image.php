@@ -123,25 +123,6 @@ class Image extends \yii\db\ActiveRecord
             throw new \Exception('Image without urlAlias!');
         }
 
-        $image = new \Imagick($imagePath);
-        $image->setImageCompressionQuality(100);
-
-        if($sizeString){
-            $size = $this->getModule()->parseSize($sizeString);
-            //p($size);die;
-            if($size){
-                if($size['height'] && $size['width']){
-                    $image->cropThumbnailImage($size['width'], $size['height']);
-                }elseif($size['height']){
-                    $image->thumbnailImage(0, $size['height']);
-                }elseif($size['width']){
-                    $image->thumbnailImage($size['width'], 0);
-                }else{
-                    throw new \Exception('Something wrong with this->module->parseSize($sizeString)');
-                }
-            }
-        }
-
         $cachePath = $this->getModule()->getCachePath();
         $subDirPath = $this->getSubDur();
         $fileExtension =  pathinfo($this->filePath, PATHINFO_EXTENSION);
@@ -156,7 +137,49 @@ class Image extends \yii\db\ActiveRecord
 
         BaseFileHelper::createDirectory(dirname($pathToSave), 0777, true);
 
-        $image->writeImage($pathToSave);
+
+        if($sizeString) {
+            $size = $this->getModule()->parseSize($sizeString);
+        }else{
+            $size = false;
+        }
+
+            if($this->getModule()->graphicsLibrary == 'Imagick'){
+                $image = new \Imagick($imagePath);
+                $image->setImageCompressionQuality(100);
+
+                if($size){
+                    if($size['height'] && $size['width']){
+                        $image->cropThumbnailImage($size['width'], $size['height']);
+                    }elseif($size['height']){
+                        $image->thumbnailImage(0, $size['height']);
+                    }elseif($size['width']){
+                        $image->thumbnailImage($size['width'], 0);
+                    }else{
+                        throw new \Exception('Something wrong with this->module->parseSize($sizeString)');
+                    }
+                }
+
+                $image->writeImage($pathToSave);
+            }else{
+                if($size){
+                    $image = new \abeautifulsite\SimpleImage($imagePath);
+
+                    if($size['height'] && $size['width']){
+
+                        $image->thumbnail($size['width'], $size['height']);
+                    }elseif($size['height']){
+                        $image->fit_to_height($size['height']);
+                    }elseif($size['width']){
+                        $image->fit_to_width($size['width']);
+                    }else{
+                        throw new \Exception('Something wrong with this->module->parseSize($sizeString)');
+                    }
+                }
+
+                $image->save($pathToSave);
+            }
+
 
         return $image;
 
