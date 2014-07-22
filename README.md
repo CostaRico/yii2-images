@@ -55,7 +55,7 @@ Installation
     <pre>
        {
             "require": {
-                "costa-rico/yii2-images": "*"
+                "costa-rico/yii2-images": "dev-master"
             }
        }
     </pre>
