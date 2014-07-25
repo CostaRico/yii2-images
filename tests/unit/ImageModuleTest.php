@@ -26,7 +26,7 @@ class ImageModuleTest extends  TestCase
     public function testParseImageAlias()
     {
         $this->specify("Bad size string", function() {
-            $data = Yii::$app->getModule('ricoStore')->parseImageAlias('test_sdf_');
+            $data = Yii::$app->getModule('yii2images')->parseImageAlias('test_sdf_');
             $this->assertEquals($data['alias'], null);
             $this->assertEquals($data['size'], null);
 
@@ -34,7 +34,7 @@ class ImageModuleTest extends  TestCase
 
         $this->specify("\nNo '_' at end without size!!!", function() {
             try{
-                $data = Yii::$app->getModule('ricoStore')->parseImageAlias('asdfds_');
+                $data = Yii::$app->getModule('yii2images')->parseImageAlias('asdfds_');
 
             }catch (\Exception $e){
                 $this->assertEquals("Something bad with size, sorry!",$e->getMessage());
@@ -43,12 +43,12 @@ class ImageModuleTest extends  TestCase
 
         });
 
-        $data = Yii::$app->getModule('ricoStore')->parseImageAlias('asdfa_234');
+        $data = Yii::$app->getModule('yii2images')->parseImageAlias('asdfa_234');
         $this->assertEquals('asdfa', $data['alias']);
         $this->assertEquals(null, $data['size']['height']);
         $this->assertEquals('234', $data['size']['width']);
 
-        $data = Yii::$app->getModule('ricoStore')->parseImageAlias('asdfa_234x222');
+        $data = Yii::$app->getModule('yii2images')->parseImageAlias('asdfa_234x222');
         $this->assertEquals('asdfa', $data['alias']);
         $this->assertEquals('222', $data['size']['height']);
         $this->assertEquals('234', $data['size']['width']);
