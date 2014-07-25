@@ -259,7 +259,7 @@ class ImageBehave extends Behavior
             if (!is_string($string)) {
                 throw new \Exception("Image's url must be string!");
             } else {
-                return $this->owner->{$this->createAliasMethod}();
+                return $string;
             }
 
         } else {
