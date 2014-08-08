@@ -172,7 +172,7 @@ class ImageBehave extends Behavior
 
         $imageRecords = $imageQuery->all();
         if(!$imageRecords){
-            return [];
+            return [new models\PlaceHolder()];
         }
         return $imageRecords;
     }
@@ -191,7 +191,7 @@ class ImageBehave extends Behavior
 
         $img = $imageQuery->one();
         if(!$img){
-            return null;
+            return new models\PlaceHolder();
         }
 
         return $img;

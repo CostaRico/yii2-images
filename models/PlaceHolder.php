@@ -11,22 +11,39 @@
 
 namespace rico\yii2images\models;
 
+/**
+ * TODO: check path to save and all image method for placeholder
+ */
 
-class PlaceHolder extends Image {
-    public function getUrl($size = false){
-        $url = $this->getModule()->placeHolderUrl;
-        if(!$url){
-            throw new \Exception('PlaceHolder image must have url setting!!!');
-        }
-        return $url;
-    }
+use yii;
 
-    public function getPathToOrigin(){
+class PlaceHolder extends Image
+{
 
-        $url = $this->getModule()->placeHolderPath;
-        if(!$url){
+    private $modelName = '';
+    private $itemId = '';
+    public $filePath = 'placeHolder.png';
+    public $urlAlias = 'placeHolder';
+
+
+    /*  public function getUrl($size = false){
+          $url = $this->getModule()->placeHolderUrl;
+          if(!$url){
+              throw new \Exception('PlaceHolder image must have url setting!!!');
+          }
+          return $url;
+      }*/
+
+    public function getPathToOrigin()
+    {
+
+        $url = Yii::getAlias($this->getModule()->placeHolderPath);
+        if (!$url) {
             throw new \Exception('PlaceHolder image must have path setting!!!');
         }
         return $url;
     }
-} 
+
+
+}
+
