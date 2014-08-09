@@ -44,6 +44,12 @@ class PlaceHolder extends Image
         return $url;
     }
 
+    protected  function getSubDur(){
+        return 'placeHolder';
+    }
+    public function setMain($isMain = true){
+        throw new yii\base\Exception('You must not set placeHolder as main image!!!');
+    }
 
 }
 

@@ -49,7 +49,7 @@ class Module extends \yii\base\Module
                      ])*/
             ->one();
         if(!$image){
-            $image = new PlaceHolder();
+            return $this->getPlaceHolder();
         }
 
         return $image;
@@ -167,5 +167,14 @@ class Module extends \yii\base\Module
         )
             throw new \Exception('Setup imagesStorePath and imagesCachePath images module properties!!!');
         // custom initialization code goes here
+    }
+
+    public function getPlaceHolder(){
+
+        if($this->placeHolderPath){
+            return new PlaceHolder();
+        }else{
+            return null;
+        }
     }
 }

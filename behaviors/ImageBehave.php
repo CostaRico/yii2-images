@@ -172,7 +172,7 @@ class ImageBehave extends Behavior
 
         $imageRecords = $imageQuery->all();
         if(!$imageRecords){
-            return [new models\PlaceHolder()];
+            return $this->getModule()->getPlaceHolder();
         }
         return $imageRecords;
     }
@@ -191,7 +191,7 @@ class ImageBehave extends Behavior
 
         $img = $imageQuery->one();
         if(!$img){
-            return new models\PlaceHolder();
+            return $this->getModule()->getPlaceHolder();
         }
 
         return $img;
@@ -280,6 +280,8 @@ class ImageBehave extends Behavior
 
         return $aliasWords . '-' . intval($imagesCount + 1);
     }
+
+
 
 
 }

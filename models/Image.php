@@ -132,8 +132,8 @@ class Image extends \yii\db\ActiveRecord
         }else{
             $sizePart = '';
         }
-        $pathToSave = $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$sizePart.'.'.$fileExtension;
 
+        $pathToSave = $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$sizePart.'.'.$fileExtension;
 
         BaseFileHelper::createDirectory(dirname($pathToSave), 0777, true);
 
@@ -196,7 +196,7 @@ class Image extends \yii\db\ActiveRecord
 
     }
 
-    private function getSubDur(){
+    protected function getSubDur(){
         return $this->modelName. 's/' . $this->modelName.$this->itemId;
     }
 
