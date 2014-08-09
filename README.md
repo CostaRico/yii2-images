@@ -49,6 +49,50 @@ if($image){
 
 ```
 
+Details
+-------------
+1. Get images
+    ```php
+    $model->getImage(); //returns main image for model (first added image or setted as main)
+    
+    $model->removeImages(); //returns array with images
+    
+    //If there is no images for model, above methods will return PlaceHolder images or null
+    //If you want placeholder set up it in module configuration (see documentation)
+    
+    ```
+2. Remove image/images
+    ```php
+    $model->removeImage($image); //you must to pass image (object)
+    
+    $model->removeImages(); //will remove all images of this model
+    ```
+
+3. Set main image
+    ```php
+    $model->attachImage($absolutePathToImage, true); //will attach image and make it main
+    
+    foreach($model->getImages() as $img){
+        if($img->id == $ourId){
+            $model->setMainImage($img);//will set current image main
+        }
+    }
+    ```
+
+4. Get image sizes
+    ```php
+    $image = $model->getImage();
+    $sizes = $image->getSizesWhen('x500');
+    echo '&lt;img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$image->getUrl('x500').'" />';
+    ```
+
+5. Get original image
+    ```php
+    $img = $model->getImage();
+    echo $img->getPathToOrigin();
+    ```
+
+
 Installation
 -------------
 1. Add Yii2-user to the require section of your composer.json file:
@@ -70,7 +114,7 @@ Installation
     </pre>
 
 4. setup module
-    <pre>
+    ```php
     'modules' => [
             'yii2images' => [
                 'class' => 'rico\yii2images\Module',
@@ -79,12 +123,13 @@ Installation
                 'imagesStorePath' => 'images/store', //path to origin images
                 'imagesCachePath' => 'images/cache', //path to resized copies
                 'graphicsLibrary' => 'GD' //but really its better to use 'Imagick' 
+                'placeHolderPath' => '@webroot/images/placeHolder.png' // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
             ],
         ],
-    </pre>
+    ```
 
 5. attach behaviour to your model (be sure that your model has "id" property)
-    <pre>
+    ```php
         public function behaviors()
         {
             return [
@@ -93,40 +138,8 @@ Installation
                 ]
             ];
         }
-    </pre>
+    ```
 
 Thats all!
 
-Details
--------------
 
-1. Remove image/images
-    <pre>
-    $model->removeImage($image); //you must to pass image (object)
-    
-    $model->removeImages(); //will remove all images of this model
-    </pre>
-
-2. Set main image
-    <pre>
-    $model->attachImage($absolutePathToImage, true); //will attach image and make it main
-    
-    foreach($model->getImages() as $img){
-        if($img->id == $ourId){
-            $model->setMainImage($img);//will set current image main
-        }
-    }
-    </pre>
-
-3. Get image sizes
-    <pre>
-    $image = $model->getImage();
-    $sizes = $image->getSizesWhen('x500');
-    echo '&lt;img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$image->getUrl('x500').'" />';
-    </pre>
-
-4. Get original image
-    <pre>
-    $img = $model->getImage();
-    echo $img->getPathToOrigin();
-    </pre>
