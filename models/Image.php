@@ -99,8 +99,17 @@ class Image extends \yii\db\ActiveRecord
         if(!$size){
             throw new \Exception('Bad size..');
         }
-        $image = new \Imagick($this->getPathToOrigin());
-        $sizes = $image->getImageGeometry();
+
+        if($this->getModule()->graphicsLibrary == 'Imagick'){
+            $image = new \Imagick($this->getPathToOrigin());
+            $sizes = $image->getImageGeometry();
+        }else{
+            $image = new \abeautifulsite\SimpleImage($this->getPathToOrigin());
+            $sizes['width'] = $image->get_width();
+            $sizes['height'] = $image->get_height();
+        }
+
+
         $imageWidth = $sizes['width'];
         $imageHeight = $sizes['height'];
         $newSizes = [];
