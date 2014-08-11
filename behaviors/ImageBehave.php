@@ -91,9 +91,16 @@ class ImageBehave extends Behavior
             unlink($newAbsolutePath);
             throw new \Exception(array_shift($ar));
         }
+        $img = $this->owner->getImage();
 
         //If main image not exists
-        if(!$this->owner->getImage() or $isMain){
+        if(
+            is_object($img) && get_class($img)=='rico\yii2images\models\PlaceHolder'
+            or
+            $img == null
+            or
+            $isMain
+        ){
             $this->setMainImage($image);
         }
 
