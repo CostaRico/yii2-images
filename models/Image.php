@@ -200,12 +200,10 @@ class Image extends \yii\db\ActiveRecord
                     $wmMaxWidth = intval($image->get_width()*0.4);
                     $wmMaxHeight = intval($image->get_height()*0.4);
 
-                    $waterMark = new \abeautifulsite\SimpleImage(Yii::getAlias($this->getModule()->waterMark));
+                    $waterMarkPath = Yii::getAlias($this->getModule()->waterMark);
 
-                    $waterMarkPath = $this->getModule()->getCachePath().DIRECTORY_SEPARATOR.
-                        pathinfo($this->getModule()->waterMark)['filename'].
-                        $wmMaxWidth.'x'.$wmMaxHeight.'.'.
-                        pathinfo($this->getModule()->waterMark)['extension'];
+                    $waterMark = new \abeautifulsite\SimpleImage($waterMarkPath);
+
 
 
                     if(
@@ -213,6 +211,11 @@ class Image extends \yii\db\ActiveRecord
                         or
                         $waterMark->get_width() > $wmMaxWidth
                     ){
+
+                        $waterMarkPath = $this->getModule()->getCachePath().DIRECTORY_SEPARATOR.
+                            pathinfo($this->getModule()->waterMark)['filename'].
+                            $wmMaxWidth.'x'.$wmMaxHeight.'.'.
+                            pathinfo($this->getModule()->waterMark)['extension'];
 
                         //throw new Exception($waterMarkPath);
                         if(!file_exists($waterMarkPath)){
