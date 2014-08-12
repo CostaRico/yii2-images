@@ -207,6 +207,7 @@ class Image extends \yii\db\ActiveRecord
                         $wmMaxWidth.'x'.$wmMaxHeight.'.'.
                         pathinfo($this->getModule()->waterMark)['extension'];
 
+
                     if(
                         $waterMark->get_height() > $wmMaxHeight
                         or
@@ -217,6 +218,9 @@ class Image extends \yii\db\ActiveRecord
                         if(!file_exists($waterMarkPath)){
                             $waterMark->fit_to_width($wmMaxWidth);
                             $waterMark->save($waterMarkPath);
+                            if(!file_exists($waterMarkPath)){
+                                throw new Exception('Cant save watermark to '.$waterMarkPath.'!!!');
+                            }
                         }
 
                     }
