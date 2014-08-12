@@ -19,6 +19,8 @@ class Module extends \yii\base\Module
 
     public $placeHolderPath;
 
+    public $waterMark = false;
+
 
 
 

@@ -15,6 +15,7 @@
 namespace rico\yii2images\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\helpers\Url;
 use yii\helpers\BaseFileHelper;
 use \rico\yii2images\ModuleTrait;
@@ -174,6 +175,8 @@ class Image extends \yii\db\ActiveRecord
 
                 $image = new \abeautifulsite\SimpleImage($imagePath);
 
+
+
                 if($size){
                     if($size['height'] && $size['width']){
 
@@ -185,6 +188,39 @@ class Image extends \yii\db\ActiveRecord
                     }else{
                         throw new \Exception('Something wrong with this->module->parseSize($sizeString)');
                     }
+                }
+
+                //WaterMark
+                if($this->getModule()->waterMark){
+
+                    if(!file_exists(Yii::getAlias($this->getModule()->waterMark))){
+                        throw new Exception('WaterMark not detected!');
+                    }
+
+                    $wmMaxWidth = intval($image->get_width()*0.4);
+                    $wmMaxHeight = intval($image->get_height()*0.4);
+
+                    $waterMark = new \abeautifulsite\SimpleImage(Yii::getAlias($this->getModule()->waterMark));
+
+                    if(
+                        $waterMark->get_height() > $wmMaxHeight
+                        or
+                        $waterMark->get_width() > $wmMaxWidth
+                    ){
+                        $waterMarkPath = $this->getModule()->getCachePath().DIRECTORY_SEPARATOR.
+                            pathinfo($this->getModule()->waterMark)['filename'].
+                            $wmMaxWidth.'x'.$wmMaxHeight.'.'.
+                            pathinfo($this->getModule()->waterMark)['extension'];
+                        //throw new Exception($waterMarkPath);
+                        if(!file_exists($waterMarkPath)){
+                            $waterMark->fit_to_width($wmMaxWidth);
+                            $waterMark->save($waterMarkPath);
+                        }
+
+                    }
+
+                    $image->overlay($waterMarkPath, 'bottom right', .5, -10, -10);
+
                 }
 
                 $image->save($pathToSave);
