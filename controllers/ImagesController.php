@@ -35,7 +35,7 @@ class ImagesController extends Controller
      * @param $alias
      *
      */
-    public function actionImageByItemAndAlias($item, $dirtyAlias)
+    public function actionImageByItemAndAlias($item='', $dirtyAlias)
     {
         $dotParts = explode('.', $dirtyAlias);
         if(!isset($dotParts[1])){
