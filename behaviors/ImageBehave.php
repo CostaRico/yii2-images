@@ -26,6 +26,11 @@ class ImageBehave extends Behavior
     use ModuleTrait;
     public $createAliasMethod = false;
 
+    /**
+     * @var ActiveRecord|null Model class, which will be used for storing image data in db, if not set default class(models/Image) will be used
+     */
+    public $modelClass = null;
+
 
 
     /**
@@ -71,8 +76,11 @@ class ImageBehave extends Behavior
             throw new \Exception('Cant copy file! ' . $absolutePath . ' to ' . $newAbsolutePath);
         }
 
-
-        $image = new models\Image;
+        if($this->modelClass === null) {
+            $image = new models\Image;
+        }else{
+            $image = new ${$this->modelClass}();
+        }
         $image->itemId = $this->owner->id;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
         $image->modelName = $this->getModule()->getShortClass($this->owner);
