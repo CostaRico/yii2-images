@@ -59,7 +59,6 @@ class Module extends \yii\base\Module
 
     public function getStorePath()
     {
-
         return Yii::getAlias($this->imagesStorePath);
     }
 

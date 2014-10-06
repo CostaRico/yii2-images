@@ -69,7 +69,6 @@ class Image extends \yii\db\ActiveRecord
 
         $filePath = $base.DIRECTORY_SEPARATOR.
             $sub.DIRECTORY_SEPARATOR.$this->urlAlias.$urlSize.'.'.pathinfo($origin, PATHINFO_EXTENSION);;
-
         if(!file_exists($filePath)){
             $this->createVersion($origin, $size);
 
@@ -234,7 +233,6 @@ class Image extends \yii\db\ActiveRecord
 
                 $image->save($pathToSave, 100);
             }
-
 
         return $image;
 
