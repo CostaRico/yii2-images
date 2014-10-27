@@ -93,13 +93,10 @@ class Image extends \yii\db\ActiveRecord
         return $filePath;
     }
 
-    public function getSizesWhen($sizeString){
 
-        $size = $this->getModule()->parseSize($sizeString);
-        if(!$size){
-            throw new \Exception('Bad size..');
-        }
-
+    public function getSizes()
+    {
+        $sizes = false;
         if($this->getModule()->graphicsLibrary == 'Imagick'){
             $image = new \Imagick($this->getPathToOrigin());
             $sizes = $image->getImageGeometry();
@@ -109,6 +106,19 @@ class Image extends \yii\db\ActiveRecord
             $sizes['height'] = $image->get_height();
         }
 
+        return $sizes;
+    }
+
+    public function getSizesWhen($sizeString){
+
+        $size = $this->getModule()->parseSize($sizeString);
+        if(!$size){
+            throw new \Exception('Bad size..');
+        }
+
+
+
+        $sizes = $this->getSizes();
 
         $imageWidth = $sizes['width'];
         $imageHeight = $sizes['height'];
