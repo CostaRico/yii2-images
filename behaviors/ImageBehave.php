@@ -29,9 +29,6 @@ class ImageBehave extends Behavior
     /**
      * @var ActiveRecord|null Model class, which will be used for storing image data in db, if not set default class(models/Image) will be used
      */
-    public $modelClass = null;
-
-
 
     /**
      *
@@ -76,10 +73,11 @@ class ImageBehave extends Behavior
             throw new \Exception('Cant copy file! ' . $absolutePath . ' to ' . $newAbsolutePath);
         }
 
-        if($this->modelClass === null) {
+        if ($this->getModule()->className === null) {
             $image = new models\Image;
-        }else{
-            $image = new ${$this->modelClass}();
+        } else {
+            $class = $this->getModule()->className;
+            $image = new $class();
         }
         $image->itemId = $this->owner->id;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
@@ -181,8 +179,13 @@ class ImageBehave extends Behavior
     {
         $finder = $this->getImagesFinder();
 
-        $imageQuery = Image::find()
-            ->where($finder);
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
+        $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
         $imageRecords = $imageQuery->all();
@@ -199,9 +202,14 @@ class ImageBehave extends Behavior
      */
     public function getImage()
     {
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
         $finder = $this->getImagesFinder(['isMain' => 1]);
-        $imageQuery = Image::find()
-            ->where($finder);
+        $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
         $img = $imageQuery->one();
