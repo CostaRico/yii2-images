@@ -19,6 +19,7 @@ use yii\base\Exception;
 use yii\helpers\Url;
 use yii\helpers\BaseFileHelper;
 use \rico\yii2images\ModuleTrait;
+use rico\yii2images\effects\Gradient;
 
 
 
@@ -29,6 +30,14 @@ class Image extends \yii\db\ActiveRecord
 
     private $helper = false;
 
+
+    protected $effects = [];
+
+
+    public function setGradient($direction, $coverPercent)
+    {
+        $this->effects[] = new Gradient;
+    }
 
 
     public function clearCache(){
@@ -116,8 +125,6 @@ class Image extends \yii\db\ActiveRecord
             throw new \Exception('Bad size..');
         }
 
-
-
         $sizes = $this->getSizes();
 
         $imageWidth = $sizes['width'];
@@ -136,12 +143,7 @@ class Image extends \yii\db\ActiveRecord
         return $newSizes;
     }
 
-    public function createVersion($imagePath, $sizeString = false)
-    {
-        if(strlen($this->urlAlias)<1){
-            throw new \Exception('Image without urlAlias!');
-        }
-
+    protected function getSavePath($sizeString = false){
         $cachePath = $this->getModule()->getCachePath();
         $subDirPath = $this->getSubDur();
         $fileExtension =  pathinfo($this->filePath, PATHINFO_EXTENSION);
@@ -152,7 +154,17 @@ class Image extends \yii\db\ActiveRecord
             $sizePart = '';
         }
 
-        $pathToSave = $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$sizePart.'.'.$fileExtension;
+        return $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$sizePart.'.'.$fileExtension;
+    }
+
+    public function createVersion($imagePath, $sizeString = false)
+    {
+        if(strlen($this->urlAlias)<1){
+            throw new \Exception('Image without urlAlias!');
+        }
+
+
+        $pathToSave = $this->getSavePath($sizeString);
 
         BaseFileHelper::createDirectory(dirname($pathToSave), 0777, true);
 
