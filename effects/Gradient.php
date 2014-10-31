@@ -13,7 +13,7 @@ class Gradient {
     const VERTICAL_DIRECTION = 'v';
 
     public $direction = self::HORIZONT_DIRECTION;
-    public $coverPercent = 66;
+    public $coverPercent = 40;
     public $fromColor = 'transparent';
     public $toColor = 'black';
 
@@ -32,7 +32,7 @@ class Gradient {
         $gradient = new \Imagick();
 
         /* Градиент должен быть достаточно большой для изображения и его рамки */
-        $gradient->newPseudoImage($im->getImageWidth(), $im->getImageHeight()*0.66, "gradient:".$this->fromColor."-".$this->toColor);
+        $gradient->newPseudoImage($im->getImageWidth(), $im->getImageHeight()*$this->coverPercent/100, "gradient:".$this->fromColor."-".$this->toColor);
         $im->compositeImage($gradient, \Imagick::COMPOSITE_OVER, 0, $im->getImageHeight()-$gradient->getImageHeight()  );
 
         return $im;

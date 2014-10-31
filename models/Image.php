@@ -37,6 +37,7 @@ class Image extends \yii\db\ActiveRecord
     public function setGradient($direction = false, $coverPercent = false)
     {
         $this->effects[] = new Gradient;
+        return $this;
     }
 
 
