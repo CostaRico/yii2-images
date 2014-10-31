@@ -206,6 +206,38 @@ class Image extends \yii\db\ActiveRecord
                         throw new \Exception('Something wrong with this->module->parseSize($sizeString)');
                     }
                 }
+
+
+                /* ---=== WaterMark ===--- */
+                if($this->getModule()->waterMark) {
+
+                    if(!file_exists(Yii::getAlias($this->getModule()->waterMark))){
+                        throw new Exception('WaterMark not detected!');
+                    }
+                    $watermark = new \Imagick();
+                    $watermark->readImage(Yii::getAlias($this->getModule()->waterMark));
+
+                    $iWidth = $image->getImageWidth();
+                    $iHeight = $image->getImageHeight();
+                    $wWidth = $watermark->getImageWidth();
+                    $wHeight = $watermark->getImageHeight();
+
+                    if ($iHeight < $wHeight || $iWidth < $wWidth) {
+                        // resize the watermark
+                        $watermark->scaleImage($iWidth, $iHeight);
+
+                        // get new size
+                        $wWidth = $watermark->getImageWidth();
+                        $wHeight = $watermark->getImageHeight();
+                    }
+
+                    $x = ($iWidth - $wWidth) / 2;
+                    $y = ($iHeight - $wHeight) / 2;
+
+                    $image->compositeImage($watermark, \Imagick::COMPOSITE_OVER, $x, $y);
+                }
+
+
                 /* --=== Apply effects ===--- */
                 if(count($this->getModule()->effects) >0 && $effects){
                     foreach ($this->getModule()->effects as $effect) {
