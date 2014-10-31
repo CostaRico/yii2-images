@@ -83,8 +83,12 @@ class Image extends \yii\db\ActiveRecord
 
         $origin = $this->getPathToOrigin();
 
+        if($effects){
+            $effects = '_'.$effects;
+        }
         $filePath = $base.DIRECTORY_SEPARATOR.
-            $sub.DIRECTORY_SEPARATOR.$this->urlAlias.'_'.$effects.$urlSize.'.'.pathinfo($origin, PATHINFO_EXTENSION);
+            $sub.DIRECTORY_SEPARATOR.$this->urlAlias.$effects.$urlSize.'.'.pathinfo($origin, PATHINFO_EXTENSION);
+
         if(!file_exists($filePath)){
             $this->createVersion($origin, $size, $effects);
 
@@ -154,10 +158,9 @@ class Image extends \yii\db\ActiveRecord
         $cachePath = $this->getModule()->getCachePath();
         $subDirPath = $this->getSubDur();
         $fileExtension =  pathinfo($this->filePath, PATHINFO_EXTENSION);
-
         $effectsPart = '';
         if($effectsString){
-            $effectsPart = '_'.$effectsString;
+            $effectsPart = $effectsString;
         }
 
         if($sizeString){
@@ -203,7 +206,7 @@ class Image extends \yii\db\ActiveRecord
                     }
                 }
                 /* --=== Apply effects ===--- */
-                if(count($this->getModule()->effects) >0){
+                if(count($this->getModule()->effects) >0 && $effects){
                     foreach ($this->getModule()->effects as $effect) {
                         $pattern = '/'.preg_quote($effect['id'], '/').'/';
                         if(preg_match($pattern, $effect['id'])){

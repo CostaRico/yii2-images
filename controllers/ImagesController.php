@@ -58,7 +58,7 @@ class ImagesController extends Controller
 
         if($image){
             header('Content-Type: image/jpg');
-            echo $image->getContent($size['width'].'x'.$size['height'], $effects);
+            echo $image->getContent($this->getModule()->sizeToString($params['size']), $effects);
         }else{
             throw new \yii\web\HttpException(404, 'There is no images');
         }

@@ -134,6 +134,18 @@ class Module extends \yii\base\Module
         return $size;
     }
 
+
+    public function sizeToString($size){
+        if(!is_array($size)){
+            return '';
+        }
+        $string = $size['width'].'x'.$size['height'];
+        if($string == 'x'){
+            return '';
+        }
+        return $string;
+    }
+
     public function parseImageAlias($parameterized)
     {
         $params = explode('_', $parameterized);
