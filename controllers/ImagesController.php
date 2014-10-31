@@ -43,8 +43,13 @@ class ImagesController extends Controller
         }
         $dirtyAlias = $dotParts[0];
 
-        $size = isset(explode('_', $dirtyAlias)[1]) ? explode('_', $dirtyAlias)[1] : false;
-        $alias = isset(explode('_', $dirtyAlias)[0]) ? explode('_', $dirtyAlias)[0] : false;
+
+        $params = $this->getModule()->parseImageAlias($dirtyAlias);
+        /*$size = isset(explode('_', $dirtyAlias)[1]) ? explode('_', $dirtyAlias)[1] : false;
+        $alias = isset(explode('_', $dirtyAlias)[0]) ? explode('_', $dirtyAlias)[0] : false;*/
+        $alias = $params['alias'];
+        $effects = $params['effects'];
+        $size = $params['size'];
         $image = $this->getModule()->getImage($item, $alias);
 
         if($image->getExtension() != $dotParts[1]){
@@ -53,7 +58,7 @@ class ImagesController extends Controller
 
         if($image){
             header('Content-Type: image/jpg');
-            echo $image->getContent($size);
+            echo $image->getContent($size['width'].'x'.$size['height'], $effects);
         }else{
             throw new \yii\web\HttpException(404, 'There is no images');
         }

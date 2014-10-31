@@ -21,6 +21,7 @@ class Module extends \yii\base\Module
 
     public $waterMark = false;
 
+    public $effects = [];
 
 
 
@@ -31,6 +32,7 @@ class Module extends \yii\base\Module
 
         $alias = $params['alias'];
         $size = $params['size'];
+        $effects = $params['effects'];
 
         $itemId = preg_replace('/[^0-9]+/', '', $item);
         $modelName = preg_replace('/[0-9]+/', '', $item);
@@ -135,23 +137,46 @@ class Module extends \yii\base\Module
     public function parseImageAlias($parameterized)
     {
         $params = explode('_', $parameterized);
-
         if (count($params) == 1) {
             $alias = $params[0];
             $size = null;
+            $effects = null;
         } elseif (count($params) == 2) {
             $alias = $params[0];
-            $size = $this->parseSize($params[1]);
-            if (!$size) {
-                $alias = null;
+            if(preg_match('/under/', $params[1])){
+                $size = null;
+                $effects = $params[1];
+            }else{
+                $size = $this->parseSize($params[1]);
+                $effects = null;
+                if (!$size) {
+                    $alias = null;
+                }
             }
-        } else {
+
+        }elseif(count($params) == 3) {
+            $alias = $params[0];
+            $effects = $params[1];
+            $size = $this->parseSize($params[2]);
+
+            if(!$size or !preg_match('/under/', $effects)){
+                $alias = null;
+                $size = null;
+                $effects = null;
+            }
+
+        }else {
             $alias = null;
             $size = null;
+            $effects = null;
         }
 
 
-        return ['alias' => $alias, 'size' => $size];
+        return [
+            'alias' => $alias,
+            'size' => $size,
+            'effects' => $effects
+        ];
     }
 
 
@@ -165,9 +190,9 @@ class Module extends \yii\base\Module
             $this->imagesStorePath == '@app'
             or
             $this->imagesCachePath == '@app'
-        )
+        ){
             throw new \Exception('Setup imagesStorePath and imagesCachePath images module properties!!!');
-        // custom initialization code goes here
+        }
     }
 
     public function getPlaceHolder(){
