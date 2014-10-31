@@ -13,7 +13,7 @@ class Gradient {
     const VERTICAL_DIRECTION = 'v';
 
     public $direction = self::HORIZONT_DIRECTION;
-    public $coverPercent = 40;
+    public $coverPercent = 20;
     public $fromColor = 'transparent';
     public $toColor = 'black';
 
