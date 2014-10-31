@@ -222,14 +222,19 @@ class Image extends \yii\db\ActiveRecord
                     $wWidth = $watermark->getImageWidth();
                     $wHeight = $watermark->getImageHeight();
 
-                    if ($iHeight < $wHeight || $iWidth < $wWidth) {
-                        // resize the watermark
-                        $watermark->scaleImage($iWidth, $iHeight);
 
-                        // get new size
-                        $wWidth = $watermark->getImageWidth();
-                        $wHeight = $watermark->getImageHeight();
+
+                    if ($iHeight < $wHeight) {
+                        // resize the watermark
+                        $watermark->scaleImage(false, $iHeight*0.8);
                     }
+
+                    if($iWidth < $wWidth) {
+                        // resize the watermark
+                        $watermark->scaleImage($iWidth*0.8, false);
+                    }
+                    $wWidth = $watermark->getImageWidth();
+                    $wHeight = $watermark->getImageHeight();
 
                     $x = ($iWidth - $wWidth) / 2;
                     $y = ($iHeight - $wHeight) / 2;
