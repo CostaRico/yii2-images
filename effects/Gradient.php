@@ -16,22 +16,21 @@ class Gradient {
     public $coverPercent = 20;
     public $fromColor = 'transparent';
     public $toColor = 'black';
+    public $fromBottom = true;
 
     public static function getId()
     {
         /*$r = new \ReflectionClass(__CLASS__);
         $className = $r->getShortName();
         return $className.substr(md5($this->fromColor.$this->toColor.$this->direction.$this->coverPercent), 0, 6);*/
-        return 'SimpleGradient';
+        return 'SimpleGradientFromTop';
     }
 
     public function applyTo($im)
     {
-
         /* Создаём градиент. Это будет наложением для отражения */
         $gradient = new \Imagick();
 
-        /* Градиент должен быть достаточно большой для изображения и его рамки */
         $gradient->newPseudoImage($im->getImageWidth(), $im->getImageHeight()*$this->coverPercent/100, "gradient:".$this->fromColor."-".$this->toColor);
         $im->compositeImage($gradient, \Imagick::COMPOSITE_OVER, 0, $im->getImageHeight()-$gradient->getImageHeight()  );
 

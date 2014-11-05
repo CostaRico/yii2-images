@@ -20,6 +20,8 @@ use yii\helpers\Url;
 use yii\helpers\BaseFileHelper;
 use \rico\yii2images\ModuleTrait;
 use rico\yii2images\effects\Gradient;
+use rico\yii2images\effects\BigGradient;
+use rico\yii2images\effects\GradientFromTop;
 
 
 
@@ -34,9 +36,23 @@ class Image extends \yii\db\ActiveRecord
     protected $effects = [];
 
 
-    public function setGradient($direction = false, $coverPercent = false)
+    public function setGradient($fromBottom = true, $coverPercent = false)
     {
-        $this->effects[] = new Gradient;
+        if($fromBottom){
+            $gradient = new Gradient;
+            $this->effects[] = $gradient;
+        }else{
+            $gradient = new GradientFromTop;
+            $this->effects[] = $gradient;
+        }
+
+        return $this;
+    }
+
+    public function setBigGradient($fromBottom = true, $coverPercent = false)
+    {
+        $gradient = new BigGradient;
+        $this->effects[] = $gradient;
         return $this;
     }
 
@@ -173,7 +189,7 @@ class Image extends \yii\db\ActiveRecord
         return $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$effectsPart.$sizePart.'.'.$fileExtension;
     }
 
-    public function createVersion($imagePath, $sizeString = false, $effects = false)
+    public function createversion($imagePath, $sizeString = false, $effects = false)
     {
         if(strlen($this->urlAlias)<1){
             throw new \Exception('Image without urlAlias!');
