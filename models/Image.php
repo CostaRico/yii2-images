@@ -248,6 +248,18 @@ class Image extends \yii\db\ActiveRecord
 
     }
 
+    public function removeSelf()
+    {
+        $this->clearCache();
+
+        $storePath = $this->getModule()->getStorePath();
+
+        $fileToRemove = $storePath . DIRECTORY_SEPARATOR . $this->filePath;
+        if (preg_match('@\.@', $fileToRemove) and is_file($fileToRemove)) {
+            unlink($fileToRemove);
+        }
+        $this->delete();
+    }
 
     public function setMain($isMain = true){
         if($isMain){
