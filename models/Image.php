@@ -19,6 +19,9 @@ use yii\base\Exception;
 use yii\helpers\Url;
 use yii\helpers\BaseFileHelper;
 use \rico\yii2images\ModuleTrait;
+use rico\yii2images\effects\Gradient;
+use rico\yii2images\effects\BigGradient;
+use rico\yii2images\effects\GradientFromTop;
 
 
 
@@ -29,6 +32,29 @@ class Image extends \yii\db\ActiveRecord
 
     private $helper = false;
 
+
+    protected $effects = [];
+
+
+    public function setGradient($fromBottom = true, $coverPercent = false)
+    {
+        if($fromBottom){
+            $gradient = new Gradient;
+            $this->effects[] = $gradient;
+        }else{
+            $gradient = new GradientFromTop;
+            $this->effects[] = $gradient;
+        }
+
+        return $this;
+    }
+
+    public function setBigGradient($fromBottom = true, $coverPercent = false)
+    {
+        $gradient = new BigGradient;
+        $this->effects[] = $gradient;
+        return $this;
+    }
 
 
     public function clearCache(){
@@ -50,27 +76,38 @@ class Image extends \yii\db\ActiveRecord
     }
 
     public function getUrl($size = false){
+        $effectsPart = '';
+        if(count($this->effects)>0){
+            foreach($this->effects as $effect){
+                $effectsPart .= $effect->getId();
+            }
+            $effectsPart = '_under'.$effectsPart;
+        }
         $urlSize = ($size) ? '_'.$size : '';
         $url = Url::toRoute([
             '/'.$this->getModule()->id.'/images/image-by-item-and-alias',
             'item' => $this->modelName.$this->itemId,
-            'dirtyAlias' =>  $this->urlAlias.$urlSize.'.'.$this->getExtension()
+            'dirtyAlias' =>  $this->urlAlias.$effectsPart.$urlSize.'.'.$this->getExtension()
         ]);
 
         return $url;
     }
 
-    public function getPath($size = false){
+    public function getPath($size = false, $effects = false){
         $urlSize = ($size) ? '_'.$size : '';
         $base = $this->getModule()->getCachePath();
         $sub = $this->getSubDur();
 
         $origin = $this->getPathToOrigin();
 
+        if($effects){
+            $effects = '_'.$effects;
+        }
         $filePath = $base.DIRECTORY_SEPARATOR.
-            $sub.DIRECTORY_SEPARATOR.$this->urlAlias.$urlSize.'.'.pathinfo($origin, PATHINFO_EXTENSION);;
+            $sub.DIRECTORY_SEPARATOR.$this->urlAlias.$effects.$urlSize.'.'.pathinfo($origin, PATHINFO_EXTENSION);
+
         if(!file_exists($filePath)){
-            $this->createVersion($origin, $size);
+            $this->createVersion($origin, $size, $effects);
 
             if(!file_exists($filePath)){
                 throw new \Exception('Problem with image creating.');
@@ -80,8 +117,8 @@ class Image extends \yii\db\ActiveRecord
         return $filePath;
     }
 
-    public function getContent($size = false){
-        return file_get_contents($this->getPath($size));
+    public function getContent($size = false, $effects = false){
+        return file_get_contents($this->getPath($size, $effects));
     }
 
     public function getPathToOrigin(){
@@ -116,8 +153,6 @@ class Image extends \yii\db\ActiveRecord
             throw new \Exception('Bad size..');
         }
 
-
-
         $sizes = $this->getSizes();
 
         $imageWidth = $sizes['width'];
@@ -136,15 +171,14 @@ class Image extends \yii\db\ActiveRecord
         return $newSizes;
     }
 
-    public function createVersion($imagePath, $sizeString = false)
-    {
-        if(strlen($this->urlAlias)<1){
-            throw new \Exception('Image without urlAlias!');
-        }
-
+    protected function getSavePath($sizeString = false, $effectsString = false){
         $cachePath = $this->getModule()->getCachePath();
         $subDirPath = $this->getSubDur();
         $fileExtension =  pathinfo($this->filePath, PATHINFO_EXTENSION);
+        $effectsPart = '';
+        if($effectsString){
+            $effectsPart = $effectsString;
+        }
 
         if($sizeString){
             $sizePart = '_'.$sizeString;
@@ -152,7 +186,17 @@ class Image extends \yii\db\ActiveRecord
             $sizePart = '';
         }
 
-        $pathToSave = $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$sizePart.'.'.$fileExtension;
+        return $cachePath.'/'.$subDirPath.'/'.$this->urlAlias.$effectsPart.$sizePart.'.'.$fileExtension;
+    }
+
+    public function createversion($imagePath, $sizeString = false, $effects = false)
+    {
+        if(strlen($this->urlAlias)<1){
+            throw new \Exception('Image without urlAlias!');
+        }
+
+
+        $pathToSave = $this->getSavePath($sizeString, $effects);
 
         BaseFileHelper::createDirectory(dirname($pathToSave), 0777, true);
 
@@ -179,6 +223,52 @@ class Image extends \yii\db\ActiveRecord
                     }
                 }
 
+
+                /* ---=== WaterMark ===--- */
+                if($this->getModule()->waterMark) {
+
+                    if(!file_exists(Yii::getAlias($this->getModule()->waterMark))){
+                        throw new Exception('WaterMark not detected!');
+                    }
+                    $watermark = new \Imagick();
+                    $watermark->readImage(Yii::getAlias($this->getModule()->waterMark));
+
+                    $iWidth = $image->getImageWidth();
+                    $iHeight = $image->getImageHeight();
+                    $wWidth = $watermark->getImageWidth();
+                    $wHeight = $watermark->getImageHeight();
+
+
+
+                    if ($iHeight < $wHeight) {
+                        // resize the watermark
+                        $watermark->scaleImage(false, $iHeight*0.8);
+                    }
+
+                    if($iWidth < $wWidth) {
+                        // resize the watermark
+                        $watermark->scaleImage($iWidth*0.8, false);
+                    }
+                    $wWidth = $watermark->getImageWidth();
+                    $wHeight = $watermark->getImageHeight();
+
+                    $x = ($iWidth - $wWidth) / 2;
+                    $y = ($iHeight - $wHeight) / 2;
+
+                    $image->compositeImage($watermark, \Imagick::COMPOSITE_OVER, $x, $y);
+                }
+
+
+                /* --=== Apply effects ===--- */
+                if(count($this->getModule()->effects) >0 && $effects){
+                    foreach ($this->getModule()->effects as $effect) {
+                        $pattern = '/'.preg_quote($effect['id'], '/').'/';
+                        if(preg_match($pattern, $effect['id'])){
+                            $effect = new $effect['class'];
+                            $image = $effect->applyTo($image);
+                        }
+                    }
+                }
                 $image->writeImage($pathToSave);
             }else{
 
@@ -240,9 +330,9 @@ class Image extends \yii\db\ActiveRecord
                     $image->overlay($waterMarkPath, 'bottom right', .5, -10, -10);
 
                 }
-
-                $image->save($pathToSave, 100);
             }
+
+        //$image->save($pathToSave, 100);
 
         return $image;
 
