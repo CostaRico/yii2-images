@@ -52,8 +52,8 @@ class ImageBehave extends Behavior
             //nothing
         }
 
-        if (!$this->owner->id) {
-            throw new \Exception('Owner must have id when you attach image!');
+        if (!$this->owner->primaryKey) {
+            throw new \Exception('Owner must have primaryKey when you attach image!');
         }
 
         $pictureFileName =
@@ -81,7 +81,7 @@ class ImageBehave extends Behavior
         }else{
             $image = new ${$this->modelClass}();
         }
-        $image->itemId = $this->owner->id;
+        $image->itemId = $this->owner->primaryKey;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
         $image->modelName = $this->getModule()->getShortClass($this->owner);
 
@@ -123,7 +123,7 @@ class ImageBehave extends Behavior
      */
     public function setMainImage($img)
     {
-        if ($this->owner->id != $img->itemId) {
+        if ($this->owner->primaryKey != $img->itemId) {
             throw new \Exception('Image must belong to this model');
         }
         $counter = 1;
@@ -250,7 +250,7 @@ class ImageBehave extends Behavior
     private function getImagesFinder($additionWhere = false)
     {
         $base = [
-            'itemId' => $this->owner->id,
+            'itemId' => $this->owner->primaryKey,
             'modelName' => $this->getModule()->getShortClass($this->owner)
         ];
 
