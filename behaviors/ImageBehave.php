@@ -72,7 +72,7 @@ class ImageBehave extends Behavior
 
         copy($absolutePath, $newAbsolutePath);
 
-        if (!file_exists($absolutePath)) {
+        if (!file_exists($newAbsolutePath)) {
             throw new \Exception('Cant copy file! ' . $absolutePath . ' to ' . $newAbsolutePath);
         }
 
