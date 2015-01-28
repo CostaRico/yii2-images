@@ -21,7 +21,7 @@ class Module extends \yii\base\Module
 
     public $waterMark = false;
 
-
+    public $className;
 
 
     public function getImage($item, $dirtyAlias)
@@ -37,7 +37,13 @@ class Module extends \yii\base\Module
 
 
         //Lets get image
-        $image = Image::find()
+        if(empty($this->className)) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->className;
+            $imageQuery = $class::find();
+        }
+        $image = $imageQuery
             ->where([
                 'modelName' => $modelName,
                 'itemId' => $itemId,
