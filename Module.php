@@ -78,7 +78,7 @@ class Module extends \yii\base\Module
     public function getModelSubDir($model)
     {
         $modelName = $this->getShortClass($model);
-        $modelDir = $modelName . 's/' . $modelName . $model->id;
+        $modelDir = $modelName . 's/' . $modelName . $model->primaryKey;
 
         return $modelDir;
     }
