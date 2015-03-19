@@ -259,7 +259,7 @@ class Image extends \yii\db\ActiveRecord
     }
 
     protected function getSubDur(){
-        return $this->modelName. 's/' . $this->modelName.$this->itemId;
+        return \yii\helpers\Inflector::pluralize($this->modelName).'/'.$this->modelName.$this->itemId;
     }
 
 
