@@ -126,11 +126,11 @@ class Image extends \yii\db\ActiveRecord
         if(!$size['width']){
             $newWidth = $imageWidth*($size['height']/$imageHeight);
             $newSizes['width'] = intval($newWidth);
-            $newSizes['heigth'] = $size['height'];
+            $newSizes['height'] = $size['height'];
         }elseif(!$size['height']){
             $newHeight = intval($imageHeight*($size['width']/$imageWidth));
             $newSizes['width'] = $size['width'];
-            $newSizes['heigth'] = $newHeight;
+            $newSizes['height'] = $newHeight;
         }
 
         return $newSizes;
