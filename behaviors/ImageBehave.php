@@ -39,7 +39,7 @@ class ImageBehave extends Behavior
      * @return bool|Image
      * @throws \Exception
      */
-    public function attachImage($absolutePath, $isMain = false)
+    public function attachImage($absolutePath, $isMain = false, $name = '')
     {
         if(!preg_match('#http#', $absolutePath)){
             if (!file_exists($absolutePath)) {
@@ -82,7 +82,7 @@ class ImageBehave extends Behavior
         $image->itemId = $this->owner->primaryKey;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
         $image->modelName = $this->getModule()->getShortClass($this->owner);
-
+        $image->name = $name;
 
         $image->urlAlias = $this->getAlias($image);
 
@@ -209,6 +209,30 @@ class ImageBehave extends Behavior
             $imageQuery = $class::find();
         }
         $finder = $this->getImagesFinder(['isMain' => 1]);
+        $imageQuery->where($finder);
+        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+
+        $img = $imageQuery->one();
+        if(!$img){
+            return $this->getModule()->getPlaceHolder();
+        }
+
+        return $img;
+    }
+
+    /**
+     * returns model image by name
+     * @return array|null|ActiveRecord
+     */
+    public function getImageByName($name)
+    {
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
+        $finder = $this->getImagesFinder(['name' => $name]);
         $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
