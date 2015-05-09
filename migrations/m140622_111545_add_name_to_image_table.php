@@ -6,7 +6,7 @@ class m140622_111545_add_name_to_image_table extends \yii\db\Migration
 {
     public function up()
     {
-         $this->addColumn('{{%image}}', 'name', 'VARCHAR(255)');
+         $this->addColumn('{{%image}}', 'name', 'VARCHAR(80)');
 
     }
 
