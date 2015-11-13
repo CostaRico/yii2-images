@@ -1,5 +1,5 @@
 {
-    "name": "costa-rico/yii2-images",
+    "name": "rrhyne/yii2-images",
     "description": "yii2 images module for storing images",
     "keywords": ["yii2", "images", "store", "images store", "yii2-images", "Costa Rico"],
     "type": "yii2-extension",
@@ -7,8 +7,8 @@
 
     "authors": [
         {
-            "name": "Costa Rico",
-            "email": "zetogo@gmail.com"
+            "name": "Rob Rhyne",
+            "email": "rob.rhyne@gmail.com"
         }
     ],
     "minimum-stability": "dev",
