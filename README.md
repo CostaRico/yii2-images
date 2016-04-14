@@ -95,7 +95,7 @@ Details
 
 Installation
 -------------
-1. Add Yii2-user to the require section of your composer.json file:
+1. Add Yii2-images to the require section of your composer.json file:
     <pre>
        {
             "require": {
