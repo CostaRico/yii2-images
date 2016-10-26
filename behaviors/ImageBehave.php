@@ -35,7 +35,7 @@ class ImageBehave extends Behavior
      * Method copies image file to module store and creates db record.
      *
      * @param $absolutePath
-     * @param bool $isFirst
+     * @param bool $isMain
      * @return bool|Image
      * @throws \Exception
      */
