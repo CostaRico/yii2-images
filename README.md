@@ -55,7 +55,7 @@ Details
     ```php
     $model->getImage(); //returns main image for model (first added image or setted as main)
     
-    $model->removeImages(); //returns array with images
+    $model->getImages(); //returns array with images
     
     //If there is no images for model, above methods will return PlaceHolder images or null
     //If you want placeholder set up it in module configuration (see documentation)
