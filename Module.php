@@ -23,6 +23,8 @@ class Module extends \yii\base\Module
 
     public $className;
 
+    public $imageCompressionQuality = 100;
+
 
     public function getImage($item, $dirtyAlias)
     {

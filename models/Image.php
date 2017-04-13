@@ -165,7 +165,7 @@ class Image extends \yii\db\ActiveRecord
 
             if($this->getModule()->graphicsLibrary == 'Imagick'){
                 $image = new \Imagick($imagePath);
-                $image->setImageCompressionQuality(100);
+                $image->setImageCompressionQuality( $this->getModule()->imageCompressionQuality );
 
                 if($size){
                     if($size['height'] && $size['width']){
