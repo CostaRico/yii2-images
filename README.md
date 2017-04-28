@@ -135,7 +135,7 @@ Installation
                 'imagesCachePath' => 'images/cache', //path to resized copies
                 'graphicsLibrary' => 'GD', //but really its better to use 'Imagick' 
                 'placeHolderPath' => '@webroot/images/placeHolder.png', // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
-                'imageCompressionQuality' => 100, // Optional. Default value is 100. Used with 'Imagick' library
+                'imageCompressionQuality' => 100, // Optional. Default value is 85.
             ],
         ],
     ```
