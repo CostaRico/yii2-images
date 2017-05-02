@@ -185,8 +185,6 @@ class Image extends \yii\db\ActiveRecord
 
                 $image = new \abeautifulsite\SimpleImage($imagePath);
 
-
-
                 if($size){
                     if($size['height'] && $size['width']){
 
@@ -213,7 +211,6 @@ class Image extends \yii\db\ActiveRecord
                     $waterMarkPath = Yii::getAlias($this->getModule()->waterMark);
 
                     $waterMark = new \abeautifulsite\SimpleImage($waterMarkPath);
-
 
 
                     if(
@@ -258,6 +255,12 @@ class Image extends \yii\db\ActiveRecord
         }
 
     }
+
+
+    public function getMimeType($size = false) {
+        return image_type_to_mime_type ( exif_imagetype( $this->getPath($size) ) );
+    }
+
 
     protected function getSubDur(){
         return \yii\helpers\Inflector::pluralize($this->modelName).'/'.$this->modelName.$this->itemId;
