@@ -81,7 +81,7 @@ class Module extends \yii\base\Module
     {
      
         $modelName = $this->getShortClass($model);
-        $modelDir = \yii\helpers\Inflector::pluralize($modelName).'/'. $modelName . $model->id;
+        $modelDir = \yii\helpers\Inflector::pluralize($modelName).'/'. $modelName . $model->getPrimaryKey();
         return $modelDir;
 
      
