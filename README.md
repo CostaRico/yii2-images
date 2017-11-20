@@ -83,7 +83,7 @@ Details
     $model->attachImage($absolutePathToImage, true); //will attach image and make it main
     
     foreach($model->getImages() as $img){
-        if($img->id == $ourId){
+        if($img->getPrimaryKey() == $ourId){
             $model->setMainImage($img);//will set current image main
         }
     }

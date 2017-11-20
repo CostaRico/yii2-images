@@ -79,12 +79,12 @@ class Module extends \yii\base\Module
 
     public function getModelSubDir($model)
     {
-     
+
         $modelName = $this->getShortClass($model);
         $modelDir = \yii\helpers\Inflector::pluralize($modelName).'/'. $modelName . $model->getPrimaryKey();
         return $modelDir;
 
-     
+
     }
 
 

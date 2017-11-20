@@ -112,13 +112,13 @@ class ImageBehaveTest extends DbTestCase
 
         //Check if file dir exists
         $this->assertTrue(
-            file_exists(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->id . '/'))
+            file_exists(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->getPrimaryKey() . '/'))
             &&
-            is_dir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->id . '/'))
+            is_dir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->getPrimaryKey() . '/'))
         );
 
         //Check file exists
-        $file = scandir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->id . '/'))[2];
+        $file = scandir(vfsStream::url('root/Store/ActiveRecordImages/ActiveRecordImage' . $this->model->getPrimaryKey() . '/'))[2];
         $this->assertTrue(isset($file));
 
         //Check file extension
@@ -127,7 +127,7 @@ class ImageBehaveTest extends DbTestCase
 
         //Check db record
         $imageRecord = Image::find()->where([
-            'itemId' => $this->model->id,
+            'itemId' => $this->model->getPrimaryKey(),
             'modelName' => 'ActiveRecordImage'
         ])->one();
 
@@ -215,7 +215,7 @@ class ImageBehaveTest extends DbTestCase
 
         //Check db record removed
         $imageRecord = Image::find()->where([
-            'itemId' => $this->model->id,
+            'itemId' => $this->model->getPrimaryKey(),
             'modelName' => 'ActiveRecordImage'
         ])->one();
 
@@ -243,7 +243,7 @@ class ImageBehaveTest extends DbTestCase
         $this->assertTrue($img->isMain == 1);
 
         //Remember main image id
-        $oldMainImageId = $img->id;
+        $oldMainImageId = $img->getPrimaryKey();
 
         $this->model->attachImage(__DIR__ . '/data/testPicture.jpg');
         $newMainImage = $this->model->attachImage(__DIR__ . '/data/testPicture.jpg', true);
@@ -253,13 +253,13 @@ class ImageBehaveTest extends DbTestCase
         $images = $this->model->getImages();
         foreach ($images as $i) {
             if ($i->isMain == 0) {
-                $this->assertTrue($i->id != $newMainImage->id);
+                $this->assertTrue($i->getPrimaryKey() != $newMainImage->getPrimaryKey());
             } else {
-                $this->assertTrue($i->id == $newMainImage->id);
+                $this->assertTrue($i->getPrimaryKey() == $newMainImage->getPrimaryKey());
             }
         }
 
-        $this->assertTrue($oldMainImageId != $newMainImage->id);
+        $this->assertTrue($oldMainImageId != $newMainImage->getPrimaryKey());
     }
 
 
