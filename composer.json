@@ -9,12 +9,16 @@
         {
             "name": "Costa Rico",
             "email": "zetogo@gmail.com"
+        },
+        {
+            "name": "Rob Rhyne",
+            "email": "rob.rhyne@gmail.com"
         }
     ],
     "minimum-stability": "dev",
     "require": {
         "yiisoft/yii2": "*",
-        "abeautifulsite/simpleimage": "*"
+        "abeautifulsite/simpleimage": "2.7"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

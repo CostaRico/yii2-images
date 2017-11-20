@@ -8,7 +8,6 @@
 
 namespace rico\yii2images\behaviors;
 
-
 use rico\yii2images\models\Image;
 
 use yii;
@@ -18,11 +17,8 @@ use rico\yii2images\models;
 use yii\helpers\BaseFileHelper;
 use \rico\yii2images\ModuleTrait;
 
-
-
 class ImageBehave extends Behavior
 {
-
     use ModuleTrait;
     public $createAliasMethod = false;
 
@@ -35,11 +31,11 @@ class ImageBehave extends Behavior
      * Method copies image file to module store and creates db record.
      *
      * @param $absolutePath
-     * @param bool $isFirst
+     * @param bool $isMain
      * @return bool|Image
      * @throws \Exception
      */
-    public function attachImage($absolutePath, $isMain = false)
+    public function attachImage($absolutePath, $isMain = false, $name = '')
     {
         if(!preg_match('#http#', $absolutePath)){
             if (!file_exists($absolutePath)) {
@@ -82,7 +78,7 @@ class ImageBehave extends Behavior
         $image->itemId = $this->owner->primaryKey;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
         $image->modelName = $this->getModule()->getShortClass($this->owner);
-
+        $image->name = $name;
 
         $image->urlAlias = $this->getAlias($image);
 
@@ -148,7 +144,6 @@ class ImageBehave extends Behavior
         $this->owner->clearImagesCache();
     }
 
-
     /**
      * Clear all images cache (and resized copies)
      * @return bool
@@ -169,7 +164,6 @@ class ImageBehave extends Behavior
         }
     }
 
-
     /**
      * Returns model images
      * First image alwats must be main image
@@ -189,12 +183,11 @@ class ImageBehave extends Behavior
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
         $imageRecords = $imageQuery->all();
-        if(!$imageRecords){
+        if(!$imageRecords && $this->getModule()->placeHolderPath){
             return [$this->getModule()->getPlaceHolder()];
         }
         return $imageRecords;
     }
-
 
     /**
      * returns main model image
@@ -221,6 +214,30 @@ class ImageBehave extends Behavior
     }
 
     /**
+     * returns model image by name
+     * @return array|null|ActiveRecord
+     */
+    public function getImageByName($name)
+    {
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
+        $finder = $this->getImagesFinder(['name' => $name]);
+        $imageQuery->where($finder);
+        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+
+        $img = $imageQuery->one();
+        if(!$img){
+            return $this->getModule()->getPlaceHolder();
+        }
+
+        return $img;
+    }
+
+    /**
      * Remove all model images
      */
     public function removeImages()
@@ -232,18 +249,25 @@ class ImageBehave extends Behavior
             foreach ($images as $image) {
                 $this->owner->removeImage($image);
             }
+            $storePath = $this->getModule()->getStorePath($this->owner);
+            $pictureSubDir = $this->getModule()->getModelSubDir($this->owner);
+            $dirToRemove = $storePath . DIRECTORY_SEPARATOR . $pictureSubDir;
+            BaseFileHelper::removeDirectory($dirToRemove);
         }
+
     }
 
-
     /**
-     *
      * removes concrete model's image
      * @param Image $img
      * @throws \Exception
+     * @return bool
      */
     public function removeImage(Image $img)
     {
+        if ($img instanceof models\PlaceHolder) {
+            return false;
+        }
         $img->clearCache();
 
         $storePath = $this->getModule()->getStorePath();
@@ -253,6 +277,7 @@ class ImageBehave extends Behavior
             unlink($fileToRemove);
         }
         $img->delete();
+        return true;
     }
 
     private function getImagesFinder($additionWhere = false)
@@ -268,8 +293,6 @@ class ImageBehave extends Behavior
 
         return $base;
     }
-
-
 
     /** Make string part of image's url
      * @return string
@@ -290,7 +313,6 @@ class ImageBehave extends Behavior
         }
     }
 
-
     /**
      *
      * Обновить алиасы для картинок
@@ -303,10 +325,4 @@ class ImageBehave extends Behavior
 
         return $aliasWords . '-' . intval($imagesCount + 1);
     }
-
-
-
-
 }
-
-

@@ -23,6 +23,8 @@ class Module extends \yii\base\Module
 
     public $className;
 
+    public $imageCompressionQuality = 85;
+
 
     public function getImage($item, $dirtyAlias)
     {
@@ -77,10 +79,12 @@ class Module extends \yii\base\Module
 
     public function getModelSubDir($model)
     {
-        $modelName = $this->getShortClass($model);
-        $modelDir = $modelName . 's/' . $modelName . $model->primaryKey;
 
+        $modelName = $this->getShortClass($model);
+        $modelDir = \yii\helpers\Inflector::pluralize($modelName).'/'. $modelName . $model->getPrimaryKey();
         return $modelDir;
+
+
     }
 
 
